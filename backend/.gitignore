@@ -1,0 +1,22 @@
+# ambiente
+.env
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+
+# banco de dados
+*.db
+*.sqlite
+*.sqlite3
+
+# sessões do playwright
+sessions/
+
+# logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

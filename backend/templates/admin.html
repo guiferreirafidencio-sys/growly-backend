@@ -1,0 +1,390 @@
+ """
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --lime:   #c8ff00;
+  --pink:   #ff3cac;
+  --pink2:  #e8198b;
+  --pink3:  #ff6fd8;
+  --blue:   #00cfff;
+  --ink:    #0a0a0f;
+  --card:   #13131a;
+  --card2:  #1a1a25;
+  --border: rgba(255,255,255,0.07);
+  --muted:  rgba(255,255,255,0.28);
+}
+
+body {
+  background: var(--ink);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* BLOBS */
+.bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px); opacity: .35;
+  animation: float 8s ease-in-out infinite alternate;
+}
+.b1 { width:380px;height:380px;background:var(--pink);   top:-12%;left:-8%; }
+.b2 { width:300px;height:300px;background:var(--blue);   bottom:-8%;right:-5%;animation-delay:-3s; }
+.b3 { width:160px;height:160px;background:var(--lime);   top:55%;left:42%;opacity:.18;animation-delay:-5s; }
+.bg::after {
+  content:''; position:absolute; inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+@keyframes float {
+  from { transform: translate(0,0) scale(1); }
+  to   { transform: translate(20px,-25px) scale(1.06); }
+}
+
+/* LAYOUT */
+.page {
+  position: relative; z-index: 1;
+  max-width: 1100px; margin: 0 auto;
+  padding: 2rem 1.5rem 5rem;
+}
+
+/* HEADER */
+header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+}
+.logo {
+  font-size: 1rem; font-weight: 800;
+  letter-spacing: .14em; text-transform: uppercase;
+  font-family: 'Syne Mono', monospace;
+  background: linear-gradient(90deg, var(--pink), var(--blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.badge-admin {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: rgba(200,255,0,.08);
+  border: 1px solid rgba(200,255,0,.22);
+  color: var(--lime);
+  font-family: 'Syne Mono', monospace;
+  font-size: .6rem; letter-spacing: .12em;
+  padding: .3rem .85rem; border-radius: 100px;
+}
+.badge-admin::before {
+  content:''; width:5px; height:5px;
+  background:var(--lime); border-radius:50%;
+  animation: blink 1.4s ease infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+
+/* STAT CARDS */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1rem; margin-bottom: 1.5rem;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 1.8rem 1.6rem;
+  position: relative; overflow: hidden;
+  transition: border-color .2s, transform .2s;
+  animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.stat-card:hover { border-color: rgba(255,255,255,.14); transform: translateY(-3px); }
+.stat-card::before {
+  content:''; position:absolute;
+  top:0;left:10%;right:10%; height:1px;
+}
+.stat-card:nth-child(1)::before { background:var(--pink); }
+.stat-card:nth-child(2)::before { background:var(--blue); }
+.stat-card:nth-child(3)::before { background:var(--lime); }
+.stat-card:nth-child(1) { animation-delay:.08s; }
+.stat-card:nth-child(2) { animation-delay:.14s; }
+.stat-card:nth-child(3) { animation-delay:.20s; }
+
+.stat-label {
+  font-family: 'Syne Mono', monospace;
+  font-size: .6rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: .8rem;
+}
+.stat-value { font-size: 2.8rem; font-weight: 800; line-height: 1; }
+.stat-card:nth-child(1) .stat-value { color: var(--pink3); }
+.stat-card:nth-child(2) .stat-value { color: var(--blue); }
+.stat-card:nth-child(3) .stat-value { color: var(--lime); }
+
+/* SEÇÕES */
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem; margin-bottom: 1.2rem;
+  animation: popIn .5s cubic-bezier(.34,1.56,.64,1) .26s both;
+}
+.section-title {
+  font-family: 'Syne Mono', monospace;
+  font-size: .6rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+/* CHART */
+.chart-wrap { height: 200px; position: relative; }
+
+/* TABELA */
+.users-table { width:100%; border-collapse:collapse; }
+.users-table th {
+  font-family: 'Syne Mono', monospace;
+  font-size: .58rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .1em;
+  text-align: left; padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.users-table td {
+  padding: 13px 12px; font-size: .85rem;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  vertical-align: middle;
+}
+.users-table tr:last-child td { border-bottom: none; }
+.users-table tr:hover td { background: rgba(255,60,172,.04); }
+
+.user-cell { display:flex; align-items:center; gap:10px; }
+.user-avatar {
+  width:32px; height:32px; border-radius:50%;
+  object-fit:cover; border:2px solid rgba(255,60,172,.3);
+  flex-shrink:0;
+}
+.user-name  { font-weight:700; font-size:.85rem; }
+.user-email { font-size:.72rem; color:var(--muted); margin-top:1px; }
+
+.pill {
+  display:inline-block;
+  background:rgba(255,60,172,.12);
+  color:var(--pink3);
+  font-family:'Syne Mono',monospace;
+  font-size:.68rem; padding:3px 10px;
+  border-radius:100px;
+}
+.pill-zero {
+  background:rgba(255,255,255,.05);
+  color:rgba(255,255,255,.2);
+}
+
+.google-id {
+  font-family:'Syne Mono',monospace;
+  font-size:.65rem; color:rgba(255,255,255,.18);
+  max-width:110px; overflow:hidden;
+  text-overflow:ellipsis; white-space:nowrap;
+}
+.date-cell { font-size:.75rem; color:var(--muted); font-family:'Syne Mono',monospace; }
+
+/* LOADING / ERRO */
+.loading {
+  text-align:center; padding:80px;
+  color:var(--muted);
+  font-family:'Syne Mono',monospace;
+  font-size:.75rem; letter-spacing:.14em;
+}
+.loading-dot { display:inline-block; animation:blink 1.2s ease infinite; }
+.loading-dot:nth-child(2){animation-delay:.2s}
+.loading-dot:nth-child(3){animation-delay:.4s}
+.err {
+  text-align:center; padding:60px;
+  color:var(--pink); font-family:'Syne Mono',monospace;
+  font-size:.75rem;
+}
+
+@keyframes popIn {
+  from { opacity:0; transform:scale(.94) translateY(14px); }
+  to   { opacity:1; transform:scale(1)   translateY(0); }
+}
+
+@media (max-width:700px) {
+  .stats-grid { grid-template-columns:1fr; }
+  .google-id  { display:none; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<div class="page">
+  <header>
+    <div class="logo">⬡ Admin Panel</div>
+    <span class="badge-admin">RESTRITO</span>
+  </header>
+
+  <div id="loading" class="loading">
+    carregando<span class="loading-dot">.</span><span class="loading-dot">.</span><span class="loading-dot">.</span>
+  </div>
+
+  <div id="content" style="display:none">
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Usuários cadastrados</div>
+        <div class="stat-value" id="val-usuarios">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total de análises</div>
+        <div class="stat-value" id="val-analises">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ativos (7 dias)</div>
+        <div class="stat-value" id="val-ativos">—</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Análises por dia — últimos 30 dias</div>
+      <div class="chart-wrap">
+        <canvas id="chart"></canvas>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Usuários cadastrados</div>
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Google ID</th>
+            <th>Análises</th>
+            <th>Última análise</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+async function init() {
+  try {
+    const res = await fetch('/api/admin/stats');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    document.getElementById('val-usuarios').textContent = data.total_usuarios;
+    document.getElementById('val-analises').textContent = data.total_analises;
+    document.getElementById('val-ativos').textContent   = data.usuarios_ativos;
+
+    // GRÁFICO
+    const labels = data.grafico.map(d => {
+      const [,m,dia] = d.dia.split('-');
+      return dia + '/' + m;
+    });
+    const valores = data.grafico.map(d => d.total);
+
+    new Chart(document.getElementById('chart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          data: valores,
+          backgroundColor: ctx => {
+            const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
+            g.addColorStop(0, 'rgba(255,60,172,.7)');
+            g.addColorStop(1, 'rgba(255,60,172,.1)');
+            return g;
+          },
+          borderColor:  'rgba(255,60,172,.9)',
+          borderWidth:  1,
+          borderRadius: 5,
+          hoverBackgroundColor: 'rgba(255,111,216,.8)',
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#13131a',
+            borderColor: 'rgba(255,60,172,.3)',
+            borderWidth: 1,
+            titleColor: 'rgba(255,255,255,.5)',
+            bodyColor: '#ff6fd8',
+            titleFont: { family: 'Syne Mono', size: 10 },
+            bodyFont:  { family: 'Syne', size: 13, weight: '700' },
+            callbacks: {
+              title: i => i[0].label,
+              label: i => ' ' + i.raw + ' análises'
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color:'rgba(255,255,255,.22)', font:{ family:'Syne Mono', size:9 }, maxRotation:0 },
+            grid:  { color:'rgba(255,255,255,.04)' }
+          },
+          y: {
+            ticks: { color:'rgba(255,255,255,.22)', font:{ family:'Syne Mono', size:9 }, stepSize:1 },
+            grid:  { color:'rgba(255,255,255,.04)' },
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    // TABELA
+    const tbody = document.getElementById('users-tbody');
+    for (const u of data.usuarios) {
+      const pill = u.analises > 0
+        ? `<span class="pill">${u.analises}</span>`
+        : `<span class="pill pill-zero">0</span>`;
+      const foto = u.foto
+        ? `<img class="user-avatar" src="${u.foto}" alt="">`
+        : `<div class="user-avatar" style="background:rgba(255,60,172,.2);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800">${u.nome[0]}</div>`;
+
+      tbody.innerHTML += `
+        <tr>
+          <td>
+            <div class="user-cell">
+              ${foto}
+              <div>
+                <div class="user-name">${u.nome}</div>
+                <div class="user-email">${u.email}</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="google-id" title="${u.google_id}">${u.google_id}</span></td>
+          <td>${pill}</td>
+          <td><span class="date-cell">${u.ultima}</span></td>
+        </tr>`;
+    }
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+
+  } catch(e) {
+    document.getElementById('loading').innerHTML =
+      '<div class="err">Erro ao carregar dados.<br><small>' + e.message + '</small></div>';
+  }
+}
+
+init();
+</script>
+</body>
+</html>
+"""

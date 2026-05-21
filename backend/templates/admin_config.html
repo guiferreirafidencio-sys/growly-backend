@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin · Contas Instagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --pink:   #ff3cac;
+  --pink2:  #e8198b;
+  --pink3:  #ff6fd8;
+  --blue:   #00cfff;
+  --ink:    #0a0a0f;
+  --card:   #13131a;
+  --card2:  #1a1a25;
+  --border: rgba(255,255,255,0.07);
+  --green:  #c8ff00;
+}
+
+body {
+  background: var(--ink);
+  font-family: 'Syne', sans-serif;
+  min-height: 100vh;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+.bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: .35; animation: float 8s ease-in-out infinite alternate; }
+.b1 { width: 420px; height: 420px; background: var(--pink);  top: -15%; left: -10%; }
+.b2 { width: 280px; height: 280px; background: var(--blue);  bottom: -8%; right: -5%; animation-delay: -3s; }
+.b3 { width: 160px; height: 160px; background: var(--pink3); top: 50%; left: 45%; opacity: .12; animation-delay: -5s; }
+.bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+@keyframes float { from { transform: translate(0,0) scale(1); } to { transform: translate(20px,-25px) scale(1.07); } }
+
+.page { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3rem; }
+.logo {
+  font-size: 1.2rem; font-weight: 800; letter-spacing: -.02em;
+  background: linear-gradient(90deg, var(--pink), var(--blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.nav-right { display: flex; align-items: center; gap: .8rem; }
+.nav-badge {
+  font-family: 'Syne Mono', monospace; font-size: .62rem; letter-spacing: .1em;
+  color: var(--green); background: rgba(200,255,0,.08); border: 1px solid rgba(200,255,0,.2);
+  padding: .3rem .8rem; border-radius: 100px; display: flex; align-items: center; gap: .4rem;
+}
+.nav-badge::before { content: ''; width: 5px; height: 5px; background: var(--green); border-radius: 50%; animation: blink 1.4s ease infinite; }
+.back-btn {
+  font-family: 'Syne Mono', monospace; font-size: .62rem; letter-spacing: .08em;
+  color: rgba(255,255,255,.3); background: rgba(255,255,255,.04); border: 1px solid var(--border);
+  padding: .3rem .9rem; border-radius: 100px; text-decoration: none;
+  transition: color .2s, border-color .2s;
+}
+.back-btn:hover { color: rgba(255,255,255,.7); border-color: rgba(255,255,255,.15); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+
+.admin-header { margin-bottom: 2.5rem; animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both; }
+.admin-eyebrow {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-family: 'Syne Mono', monospace; font-size: .6rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--pink3); background: rgba(255,60,172,.1); border: 1px solid rgba(255,60,172,.25);
+  padding: .3rem .85rem; border-radius: 100px; margin-bottom: 1rem;
+}
+.admin-eyebrow-dot { width: 5px; height: 5px; background: var(--pink); border-radius: 50%; box-shadow: 0 0 6px var(--pink); animation: blink 1.6s ease infinite; }
+.admin-title { font-size: 2.4rem; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+.admin-title em { font-style: normal; background: linear-gradient(120deg, var(--pink), var(--pink3), #c77dff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.admin-sub { font-size: .85rem; color: rgba(255,255,255,.3); margin-top: .6rem; line-height: 1.6; }
+
+.stats-bar { display: flex; gap: 1rem; margin-bottom: 2rem; animation: popIn .5s cubic-bezier(.34,1.56,.64,1) .08s both; }
+.stat-pill {
+  flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 1.1rem 1.4rem; display: flex; flex-direction: column; gap: .25rem;
+  transition: border-color .2s, transform .2s;
+}
+.stat-pill:hover { border-color: rgba(255,60,172,.25); transform: translateY(-2px); }
+.stat-pill-val { font-size: 1.8rem; font-weight: 800; letter-spacing: -.03em; background: linear-gradient(90deg, var(--pink), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-pill-label { font-family: 'Syne Mono', monospace; font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.25); }
+
+.add-card {
+  position: relative; overflow: hidden;
+  background: #100b18; border: 1px solid rgba(255,60,172,.3); border-radius: 24px;
+  padding: 2rem; margin-bottom: 1.5rem;
+  animation: popIn .5s cubic-bezier(.34,1.56,.64,1) .14s both;
+}
+.add-card::before { content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,60,172,.6), transparent); }
+.add-glow { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 60% 80% at 10% 50%, rgba(255,60,172,.12) 0%, transparent 65%); }
+.add-card-inner { position: relative; z-index: 1; }
+.section-label {
+  font-family: 'Syne Mono', monospace; font-size: .62rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--pink3); margin-bottom: 1.2rem; display: flex; align-items: center; gap: .5rem;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: rgba(255,60,172,.15); }
+
+.add-form { display: flex; gap: .8rem; align-items: flex-end; flex-wrap: wrap; }
+.field { display: flex; flex-direction: column; gap: .45rem; flex: 1; min-width: 180px; }
+.field label { font-family: 'Syne Mono', monospace; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.3); }
+.field input {
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 12px; padding: .7rem 1rem; color: #fff;
+  font-family: 'Syne', sans-serif; font-size: .88rem; outline: none;
+  transition: border-color .2s, background .2s;
+}
+.field input::placeholder { color: rgba(255,255,255,.18); }
+.field input:focus { border-color: rgba(255,60,172,.45); background: rgba(255,60,172,.04); }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: .55rem;
+  background: var(--pink); color: #fff;
+  font-family: 'Syne', sans-serif; font-size: .82rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  padding: .75rem 1.6rem; border-radius: 100px; border: none; cursor: pointer;
+  position: relative; overflow: hidden;
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+  box-shadow: 0 6px 24px rgba(255,60,172,.35);
+  white-space: nowrap;
+}
+.btn-primary::before { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, rgba(255,255,255,.15) 0%, transparent 50%); border-radius: inherit; pointer-events: none; }
+.btn-primary:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 32px rgba(255,60,172,.5); }
+.btn-primary:active { transform: scale(.96); }
+
+.accounts-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 24px; overflow: hidden;
+  animation: popIn .5s cubic-bezier(.34,1.56,.64,1) .2s both;
+}
+.accounts-head {
+  padding: 1.4rem 1.8rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.accounts-head .section-label { margin-bottom: 0; }
+.accounts-head .section-label::after { display: none; }
+.count-badge {
+  font-family: 'Syne Mono', monospace; font-size: .6rem; letter-spacing: .1em;
+  background: rgba(255,60,172,.12); border: 1px solid rgba(255,60,172,.25);
+  color: var(--pink3); padding: .2rem .65rem; border-radius: 100px;
+}
+
+.account-row {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1.1rem 1.8rem; border-bottom: 1px solid var(--border);
+  transition: background .2s;
+}
+.account-row:last-child { border-bottom: none; }
+.account-row:hover { background: rgba(255,255,255,.025); }
+
+.account-avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--pink2), #8b1a6b);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .9rem; color: rgba(255,255,255,.85);
+}
+
+.account-info { flex: 1; min-width: 0; }
+.account-username { font-size: .9rem; font-weight: 700; color: rgba(255,255,255,.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.account-meta { font-family: 'Syne Mono', monospace; font-size: .6rem; color: rgba(255,255,255,.25); letter-spacing: .06em; margin-top: .2rem; }
+
+.account-status {
+  display: flex; align-items: center; gap: .4rem;
+  font-family: 'Syne Mono', monospace; font-size: .58rem; letter-spacing: .08em; text-transform: uppercase;
+  padding: .25rem .65rem; border-radius: 100px; flex-shrink: 0;
+}
+.status-livre    { background: rgba(200,255,0,.08); border: 1px solid rgba(200,255,0,.2); color: var(--green); }
+.status-ocupado  { background: rgba(0,207,255,.08); border: 1px solid rgba(0,207,255,.2); color: var(--blue); }
+.status-banido   { background: rgba(255,60,172,.08); border: 1px solid rgba(255,60,172,.2); color: var(--pink3); }
+.status-pendente { background: rgba(255,200,0,.08); border: 1px solid rgba(255,200,0,.2); color: #ffc800; }
+.status-dot { width: 5px; height: 5px; border-radius: 50%; }
+.status-livre .status-dot    { background: var(--green); box-shadow: 0 0 5px var(--green); animation: blink 1.4s ease infinite; }
+.status-ocupado .status-dot  { background: var(--blue);  box-shadow: 0 0 5px var(--blue); animation: blink 1s ease infinite; }
+.status-banido .status-dot   { background: var(--pink3); }
+.status-pendente .status-dot { background: #ffc800; animation: blink 0.8s ease infinite; }
+
+.account-actions { display: flex; gap: .5rem; flex-shrink: 0; }
+.icon-btn {
+  width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+  background: rgba(255,255,255,.04); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: rgba(255,255,255,.3); transition: background .2s, border-color .2s, color .2s;
+}
+.icon-btn:hover       { background: rgba(255,60,172,.1);  border-color: rgba(255,60,172,.3); color: var(--pink3); }
+.icon-btn.danger:hover{ background: rgba(255,60,172,.15); border-color: rgba(255,60,172,.4); color: var(--pink); }
+
+.account-scrapes {
+  font-family: 'Syne Mono', monospace; font-size: .6rem; color: rgba(255,255,255,.2);
+  letter-spacing: .04em; white-space: nowrap; flex-shrink: 0; text-align: right; min-width: 64px;
+}
+.account-scrapes strong { color: rgba(255,255,255,.5); }
+
+.empty-state { padding: 3.5rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: .8rem; }
+.empty-icon { width: 56px; height: 56px; border-radius: 16px; background: rgba(255,60,172,.08); border: 1px solid rgba(255,60,172,.15); display: flex; align-items: center; justify-content: center; color: rgba(255,60,172,.4); margin-bottom: .4rem; }
+.empty-title { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,.5); }
+.empty-sub   { font-size: .8rem; color: rgba(255,255,255,.2); line-height: 1.6; max-width: 260px; }
+
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 999;
+  background: var(--card2); border: 1px solid rgba(255,60,172,.3);
+  border-radius: 14px; padding: .9rem 1.3rem;
+  display: flex; align-items: center; gap: .75rem;
+  font-size: .82rem; color: rgba(255,255,255,.75);
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  transform: translateY(20px); opacity: 0;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); flex-shrink: 0; }
+.toast.error .toast-dot { background: var(--pink); box-shadow: 0 0 8px var(--pink); }
+
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal {
+  background: var(--card); border: 1px solid rgba(255,60,172,.3);
+  border-radius: 24px; padding: 2.2rem; max-width: 420px; width: 90%;
+  position: relative; overflow: hidden;
+  transform: scale(.92) translateY(16px);
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+.modal::before { content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,60,172,.6), transparent); }
+.modal-title { font-size: 1.3rem; font-weight: 800; margin-bottom: .5rem; }
+.modal-sub { font-size: .82rem; color: rgba(255,255,255,.3); line-height: 1.6; margin-bottom: 1.8rem; }
+.modal-steps { display: flex; flex-direction: column; gap: .7rem; margin-bottom: 1.8rem; }
+.modal-step { display: flex; align-items: flex-start; gap: .9rem; }
+.step-num {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(255,60,172,.15); border: 1px solid rgba(255,60,172,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne Mono', monospace; font-size: .65rem; color: var(--pink3);
+}
+.step-text { font-size: .82rem; color: rgba(255,255,255,.5); line-height: 1.55; padding-top: .2rem; }
+.modal-actions { display: flex; gap: .7rem; }
+.btn-ghost {
+  flex: 1; padding: .7rem; border-radius: 100px;
+  background: rgba(255,255,255,.05); border: 1px solid var(--border);
+  color: rgba(255,255,255,.35); font-family: 'Syne', sans-serif; font-size: .8rem; font-weight: 700;
+  cursor: pointer; transition: background .2s, color .2s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,.09); color: rgba(255,255,255,.6); }
+
+.spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes popIn { from { opacity: 0; transform: scale(.94) translateY(14px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+@media (max-width: 600px) {
+  .stats-bar { flex-wrap: wrap; }
+  .stat-pill { min-width: calc(50% - .5rem); }
+  .admin-title { font-size: 1.8rem; }
+  .add-form { flex-direction: column; }
+  .account-scrapes { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<div class="page">
+
+  <nav>
+    <span class="logo">analysify</span>
+    <div class="nav-right">
+      <span class="nav-badge">admin</span>
+      <a href="/perfil" class="back-btn">← voltar</a>
+    </div>
+  </nav>
+
+  <div class="admin-header">
+    <div class="admin-eyebrow">
+      <span class="admin-eyebrow-dot"></span>
+      configurações
+    </div>
+    <h1 class="admin-title">Contas <em>Instagram</em></h1>
+    <p class="admin-sub">Gerencie os bots disponíveis para scraping. Cada conta opera de forma independente.</p>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-pill">
+      <span class="stat-pill-val" id="stat-total">—</span>
+      <span class="stat-pill-label">contas cadastradas</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-pill-val" id="stat-livre">—</span>
+      <span class="stat-pill-label">disponíveis agora</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-pill-val" id="stat-scrapes">—</span>
+      <span class="stat-pill-label">scrapes realizados</span>
+    </div>
+  </div>
+
+  <div class="add-card">
+    <div class="add-glow"></div>
+    <div class="add-card-inner">
+      <div class="section-label">nova conta</div>
+      <div class="add-form">
+        <div class="field">
+          <label>usuário instagram</label>
+          <input type="text" id="input-username" placeholder="@seuusuario" autocomplete="off" autocorrect="off" spellcheck="false"/>
+        </div>
+        <div class="field" style="max-width:200px">
+          <label>pasta do perfil</label>
+          <input type="text" id="input-profile" placeholder="ig_profile_conta" autocomplete="off"/>
+        </div>
+        <button class="btn-primary" id="btn-add" onclick="abrirModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Cadastrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="accounts-card" id="accounts-card">
+    <div class="accounts-head">
+      <div class="section-label">contas ativas</div>
+      <span class="count-badge" id="count-badge">carregando…</span>
+    </div>
+    <div id="accounts-list">
+      <div class="empty-state">
+        <div class="empty-icon">
+          <div class="spinner"></div>
+        </div>
+        <div class="empty-title">Carregando contas…</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h2 class="modal-title">Fazer login</h2>
+    <p class="modal-sub">Um browser vai abrir para você fazer o login manualmente no Instagram.</p>
+    <div class="modal-steps">
+      <div class="modal-step">
+        <span class="step-num">1</span>
+        <span class="step-text">O browser Playwright vai abrir automaticamente na tela de login do Instagram.</span>
+      </div>
+      <div class="modal-step">
+        <span class="step-num">2</span>
+        <span class="step-text">Faça login com a conta <strong id="modal-username" style="color:var(--pink3)">—</strong> normalmente.</span>
+      </div>
+      <div class="modal-step">
+        <span class="step-num">3</span>
+        <span class="step-text">Após o login ser detectado, a sessão é salva e a conta fica disponível automaticamente.</span>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-primary" id="btn-confirmar" onclick="confirmarCadastro()" style="flex:1.5;justify-content:center">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span id="btn-confirmar-text">Abrir browser</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg">—</span>
+</div>
+
+<script>
+// ── STATE ──
+let pendingUsername = '';
+let pendingProfile  = '';
+let pollTimer       = null;
+
+// ── RENDER ──
+function renderizar(data) {
+  const contas = data.contas || [];
+  document.getElementById('stat-total').textContent   = data.total   ?? contas.length;
+  document.getElementById('stat-livre').textContent   = data.livres  ?? contas.filter(c => c.status === 'livre').length;
+  document.getElementById('stat-scrapes').textContent = data.total_scrapes ?? contas.reduce((a, c) => a + (c.scrapes || 0), 0);
+  document.getElementById('count-badge').textContent  = contas.length + (contas.length === 1 ? ' conta' : ' contas');
+
+  const list = document.getElementById('accounts-list');
+
+  if (!contas.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </div>
+        <div class="empty-title">Nenhuma conta cadastrada</div>
+        <div class="empty-sub">Cadastre uma conta acima para começar a usar os bots de scraping.</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = contas.map(c => {
+    const inicial      = (c.username || '?')[0].toUpperCase();
+    const statusClass  = { livre: 'status-livre', ocupado: 'status-ocupado', banido: 'status-banido', pendente: 'status-pendente' }[c.status] || 'status-livre';
+    const statusLabel  = { livre: 'livre', ocupado: 'ocupado', banido: 'banido', pendente: 'aguardando login' }[c.status] || c.status;
+    const ultimoLogin  = c.ultimo_login ? new Date(c.ultimo_login).toLocaleDateString('pt-BR') : 'nunca';
+    return `
+      <div class="account-row">
+        <div class="account-avatar">${inicial}</div>
+        <div class="account-info">
+          <div class="account-username">@${c.username}</div>
+          <div class="account-meta">cadastrado ${c.data_cadastro || '—'} · último login ${ultimoLogin}</div>
+        </div>
+        <span class="account-status ${statusClass}">
+          <span class="status-dot"></span>${statusLabel}
+        </span>
+        <div class="account-scrapes">
+          <strong>${c.scrapes || 0}</strong><br>scrapes
+        </div>
+        <div class="account-actions">
+          <button class="icon-btn" onclick="relogar('${c.username}', '${c.profile_dir || ''}')" title="Refazer login">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+          </button>
+          <button class="icon-btn danger" onclick="remover('${c.username}')" title="Remover conta">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── FETCH STATUS ──
+async function atualizarStatus() {
+  try {
+    const r = await fetch('/admin/config/status');
+    if (!r.ok) return;
+    const data = await r.json();
+    renderizar(data);
+  } catch (e) {
+    console.warn('erro ao buscar status:', e);
+  }
+}
+
+// Polling a cada 4 s enquanto houver conta pendente/em login
+function iniciarPolling() {
+  clearInterval(pollTimer);
+  pollTimer = setInterval(atualizarStatus, 4000);
+}
+
+// ── MODAL ──
+function abrirModal() {
+  const u = document.getElementById('input-username').value.replace('@','').trim();
+  const p = document.getElementById('input-profile').value.trim() || ('ig_profile_' + u);
+  if (!u) { toast('Digite um usuário', true); return; }
+  pendingUsername = u;
+  pendingProfile  = p;
+  document.getElementById('modal-username').textContent = '@' + u;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function fecharModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+
+async function confirmarCadastro() {
+  const btn  = document.getElementById('btn-confirmar');
+  const txt  = document.getElementById('btn-confirmar-text');
+  btn.disabled = true;
+  txt.textContent = 'Abrindo…';
+
+  try {
+    const params = new URLSearchParams({ username: pendingUsername, profile_dir: pendingProfile });
+    const r = await fetch('/admin/config/login-instagram?' + params);
+    fecharModal();
+    if (r.ok) {
+      toast('Browser aberto — faça o login no Instagram!');
+      await atualizarStatus();
+      iniciarPolling();
+    } else {
+      toast('Erro ao abrir browser', true);
+    }
+    document.getElementById('input-username').value = '';
+    document.getElementById('input-profile').value  = '';
+    document.getElementById('input-profile').removeAttribute('data-touched');
+  } catch (e) {
+    fecharModal();
+    toast('Erro de conexão', true);
+  }
+  btn.disabled = false;
+  txt.textContent = 'Abrir browser';
+}
+
+function relogar(username, profileDir) {
+  pendingUsername = username;
+  pendingProfile  = profileDir || ('ig_profile_' + username);
+  document.getElementById('modal-username').textContent = '@' + username;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+async function remover(username) {
+  if (!confirm('Remover @' + username + '?')) return;
+  try {
+    const r = await fetch('/admin/config/remover/' + encodeURIComponent(username), { method: 'DELETE' });
+    if (r.ok) {
+      toast('Conta removida');
+      await atualizarStatus();
+    } else {
+      toast('Erro ao remover conta', true);
+    }
+  } catch (e) {
+    toast('Erro de conexão', true);
+  }
+}
+
+// ── TOAST ──
+let toastTimer;
+function toast(msg, erro = false) {
+  const el = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  el.classList.toggle('error', erro);
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+// ── AUTO-FILL profile_dir ──
+document.getElementById('input-username').addEventListener('input', function () {
+  const u = this.value.replace('@','').trim();
+  const p = document.getElementById('input-profile');
+  if (!p.dataset.touched) p.value = u ? 'ig_profile_' + u : '';
+});
+document.getElementById('input-profile').addEventListener('input', function () {
+  this.dataset.touched = '1';
+});
+document.getElementById('modal-overlay').addEventListener('click', function (e) {
+  if (e.target === this) fecharModal();
+});
+
+// ── INIT ──
+atualizarStatus();
+iniciarPolling();
+</script>
+</body>
+</html>
