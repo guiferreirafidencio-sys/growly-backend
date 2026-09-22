@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='perfil.css') }}">
+</head>
+<body>
+
+  <div class="bg">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+
+  <div class="page">
+
+    <!-- NAV -->
+    <nav>
+      <div class="logo">Growly✦</div>
+      <div style="display:flex; align-items:center; gap:1rem;">
+        <div class="nav-badge">online</div>
+        <a href="/logout" class="logout-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          sair
+        </a>
+      </div>
+    </nav>
+
+    <!-- PERFIL HERO -->
+    <div class="profile-hero">
+      <div class="avatar-wrap">
+        <div class="avatar-ring">
+          <div class="avatar-inner">
+            <img src="{{ foto }}" alt="foto de {{ nome }}">
+          </div>
+        </div>
+        <div class="avatar-status"></div>
+      </div>
+      <div class="profile-info">
+        <div class="greeting">olá de volta 👋</div>
+        <div class="profile-name">{{ nome }}</div>
+        <div class="profile-email">{{ email }}</div>
+      </div>
+    </div>
+
+    <!-- ANALISAR PERFIL — CARD PRINCIPAL DESTACADO -->
+    <div class="analyze-hero" id="analyze-hero">
+      <div class="analyze-glow"></div>
+      <div class="analyze-noise"></div>
+
+      <div class="analyze-left">
+        <div class="analyze-eyebrow">
+          <span class="analyze-dot"></span>
+          função principal
+        </div>
+        <h2 class="analyze-title">analisar<br><em>seu perfil</em></h2>
+        <p class="analyze-desc">
+          veja insights, métricas e recomendações geradas pela IA com base nos seus dados.
+        </p>
+        <a href="/analisar" class="analyze-cta">
+          <span class="analyze-cta-icon">✦</span>
+          começar análise
+          <svg class="analyze-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="analyze-right">
+        <div class="analyze-orb">
+          <div class="orb-ring r1"></div>
+          <div class="orb-ring r2"></div>
+          <div class="orb-ring r3"></div>
+          <div class="orb-core">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+        </div>
+        <div class="analyze-stats">
+          <div class="astat">
+            <div class="astat-val">98%</div>
+            <div class="astat-label">precisão</div>
+          </div>
+          <div class="astat-divider"></div>
+          <div class="astat">
+            <div class="astat-val">2s</div>
+            <div class="astat-label">análise</div>
+          </div>
+          <div class="astat-divider"></div>
+          <div class="astat">
+            <div class="astat-val">IA</div>
+            <div class="astat-label">powered</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARDS MENORES -->
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-tag">sua conta</div>
+        <div class="stat-val">ativo</div>
+        <div class="card-body">tudo funcionando por aqui, sem nenhum problema 🟢</div>
+      </div>
+
+      <div class="card">
+        <div class="card-tag">membro desde</div>
+        <div class="stat-val" style="font-size:1.8rem">2025</div>
+        <div class="card-body">bem-vindo ao clube ✦</div>
+      </div>
+
+      <!-- CHAT -->
+      <div class="card full" id="chat-card">
+        <div class="card-tag">assistente ia · gemini 2.5</div>
+        <div class="card-title">converse com a IA ✦</div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg msg-ai">
+            <div class="msg-bubble">oi, {{ nome }}! sou seu assistente. como posso te ajudar hoje? ✦</div>
+          </div>
+        </div>
+
+        <div class="chat-input-row">
+          <input type="text" id="chatInput" class="chat-input" placeholder="escreva sua mensagem..." autocomplete="off"/>
+          <button class="chat-send" id="sendBtn" onclick="sendMessage()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+    <script src="{{ url_for('static', filename='js/perfil.js') }}"></script>
+</body>
+</html>

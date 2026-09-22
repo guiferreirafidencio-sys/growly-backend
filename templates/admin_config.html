@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin · Contas Instagram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-config.css') }}">
+</head>
+<body>
+
+<div class="bg">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<div class="page">
+  <nav>
+    <span class="logo">analysify</span>
+    <div class="nav-right">
+      <span class="nav-badge">admin</span>
+      <a href="/perfil" class="back-btn">← voltar</a>
+    </div>
+  </nav>
+
+  <div class="admin-header">
+    <div class="admin-eyebrow"><span class="admin-eyebrow-dot"></span>configurações</div>
+    <h1 class="admin-title">Contas <em>Instagram</em></h1>
+    <p class="admin-sub">Gerencie os bots disponíveis para scraping. Cada conta opera de forma independente.</p>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-pill">
+      <span class="stat-pill-val" id="stat-total">—</span>
+      <span class="stat-pill-label">contas cadastradas</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-pill-val" id="stat-livre">—</span>
+      <span class="stat-pill-label">disponíveis agora</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-pill-val" id="stat-scrapes">—</span>
+      <span class="stat-pill-label">scrapes realizados</span>
+    </div>
+  </div>
+
+  <div class="login-bar" id="login-bar">
+    <span class="login-bar-dot"></span>
+    <span class="login-bar-msg" id="login-bar-msg">Aguardando…</span>
+    <span class="login-bar-stage" id="login-bar-stage"></span>
+  </div>
+  <div class="screenshot-box" id="login-screenshot">
+    <img id="login-screenshot-img" src="" alt="screenshot"/>
+  </div>
+
+  <div class="add-card">
+    <div class="add-glow"></div>
+    <div class="add-card-inner">
+      <div class="section-label">nova conta</div>
+      <div class="add-form">
+        <div class="field">
+          <label>usuário instagram</label>
+          <input type="text" id="input-username" placeholder="@seuusuario" autocomplete="off" autocorrect="off" spellcheck="false"/>
+        </div>
+        <div class="field">
+          <label>senha</label>
+          <input type="password" id="input-password" placeholder="••••••••" autocomplete="off"/>
+        </div>
+        <div class="field" style="max-width:190px">
+          <label>pasta do perfil</label>
+          <input type="text" id="input-profile" placeholder="ig_profile_conta" autocomplete="off"/>
+        </div>
+        <button class="btn-primary" id="btn-add" onclick="iniciarLogin()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Cadastrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="accounts-card" id="accounts-card">
+    <div class="accounts-head">
+      <div class="section-label">contas ativas</div>
+      <span class="count-badge" id="count-badge">carregando…</span>
+    </div>
+    <div id="accounts-list">
+      <div class="empty-state">
+        <div class="empty-icon"><div class="spinner"></div></div>
+        <div class="empty-title">Carregando contas…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL 2FA -->
+<div class="modal-overlay" id="modal-2fa">
+  <div class="modal">
+    <h2 class="modal-title">Verificação necessária</h2>
+    <p class="modal-sub">O Instagram enviou um código de verificação para o e-mail ou celular da conta. Digite abaixo:</p>
+    <div class="field">
+      <label>código de verificação</label>
+      <input type="text" id="input-2fa" placeholder="123456" autocomplete="off" maxlength="8"
+        style="font-size:1.4rem;letter-spacing:.3em;text-align:center;font-family:'Syne Mono',monospace"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="fechar2FA()">Cancelar</button>
+      <button class="btn-primary" id="btn-2fa" onclick="enviar2FA()" style="flex:1.5;justify-content:center">
+        <span id="btn-2fa-text">Confirmar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-dot"></span>
+  <span id="toast-msg">—</span>
+</div>
+
+  <script src="{{ url_for('static', filename='js/admin-config.js') }}"></script>
+</body>
+</html>

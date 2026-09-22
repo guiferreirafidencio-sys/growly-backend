@@ -1,0 +1,9 @@
+flask
+flask-sqlalchemy
+python-dotenv
+requests
+oauthlib
+google-genai
+playwright==1.60.0
+gunicorn
+psycopg2-binary==2.9.10

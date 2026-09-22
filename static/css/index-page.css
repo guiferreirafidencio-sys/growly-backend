@@ -1,0 +1,64 @@
+/* ── LOGO GROWLY — centralizado ── */ .logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* centralizado */ margin-bottom: 2.8rem;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  text-decoration: none;
+  user-select: none;
+}
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.85rem;
+  letter-spacing: -.03em;
+  background: linear-gradient(90deg, var(--pink) 0%, #c060ff 50%, var(--blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+.logo-star {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  animation: spin-star 6s linear infinite;
+}
+@keyframes spin-star {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.25);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+/* headline — fonte mais legível */ .headline {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  margin-bottom: .55rem !important;
+  letter-spacing: -.01em !important;
+}
+.sub {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  font-size: .9rem !important;
+}
+/* divider "ou" maior */ .divider {
+  font-size: .85rem !important;
+  letter-spacing: .15em !important;
+  color: rgba(255,255,255,.35) !important;
+  margin: 1.8rem 0 !important;
+}
+/* badge escondido */ .badge {
+  display: none;
+}
+

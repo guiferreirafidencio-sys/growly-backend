@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+
+<div class="bg">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<div class="page">
+  <header>
+    <div class="logo">⬡ Admin Panel</div>
+    <span class="badge-admin">RESTRITO</span>
+  </header>
+
+  <div id="loading" class="loading">
+    carregando<span class="loading-dot">.</span><span class="loading-dot">.</span><span class="loading-dot">.</span>
+  </div>
+
+  <div id="content" style="display:none">
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Usuários cadastrados</div>
+        <div class="stat-value" id="val-usuarios">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total de análises</div>
+        <div class="stat-value" id="val-analises">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ativos (7 dias)</div>
+        <div class="stat-value" id="val-ativos">—</div>
+      </div>
+    </div>
+
+    <!-- BOTÃO LIMPAR CACHE -->
+    <div class="cache-bar">
+      <div class="cache-info">
+        <div class="cache-label">🗂 Cache do Chromium — sessões</div>
+        <div class="cache-msg" id="cache-msg">Limpa o cache acumulado das contas de scraping (cookies são mantidos)</div>
+      </div>
+      <button class="btn-cache" id="btn-cache" onclick="limparCache()">
+        <span class="icon">🧹</span> Limpar Cache
+      </button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Análises por dia — últimos 30 dias</div>
+      <div class="chart-wrap">
+        <canvas id="chart"></canvas>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Usuários cadastrados</div>
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>Google ID</th>
+            <th>Análises</th>
+            <th>Última análise</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

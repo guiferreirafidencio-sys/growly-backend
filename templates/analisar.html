@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analisador · Growly✦</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='Analisar.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script async data-cfasync="false" src="https://pl29508469.effectivecpmnetwork.com/92f088488ade5e217e5a7609b611e56a/invoke.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/analisar-page.css') }}">
+</head>
+
+<body>
+
+  <!-- OVERLAY DO ANÚNCIO -->
+  <div id="adOverlay">
+    <span class="ad-label">✦ patrocinado</span>
+    <div class="ad-box" id="adBox">
+      <div id="container-92f088488ade5e217e5a7609b611e56a"></div>
+    </div>
+    <span class="ad-skip-info" id="adSkipInfo">aguarde para continuar…</span>
+    <button id="btnFecharAd" disabled>aguarde 5s</button>
+  </div>
+
+  <!-- BG -->
+  <div class="bg">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+
+  <div class="page">
+
+    <nav>
+      <a href="/perfil" class="logo">Growly✦</a>
+      <div class="nav-right">
+        <div class="nav-badge">Analise IA</div>
+        <a href="/logout" class="logout-btn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          sair
+        </a>
+      </div>
+    </nav>
+
+    <section class="hero-text" id="heroText">
+      <div class="hero-tag">analisador de perfil ✦</div>
+      <h1>analise de perfil<br><span class="grad">do Instagram</span></h1>
+      <p class="hero-sub">Cole a URL do seu perfil e receba insights inteligentes de crescimento em segundos.</p>
+    </section>
+
+    <section class="input-card" id="inputSection">
+      <div class="input-row">
+        <div class="input-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        <input type="text" id="urlInput" class="url-input" placeholder="https://www.instagram.com/alguem" autocomplete="off" />
+        <button class="btn-analisar" id="btnAnalisar" onclick="rodarAnalise()">
+          <span id="btnLabel">analisar</span>
+          <svg id="btnArrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+          <svg id="btnSpinner" class="spinner hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10" stroke-opacity=".25"/>
+            <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="chips">
+        <span class="chip-label">exemplos:</span>
+        <div class="chip" onclick="setUrl('https://www.instagram.com/neymarjr/')">neymarjr</div>
+        <div class="chip" onclick="setUrl('https://www.instagram.com/virginia/')">virginia</div>
+        <div class="chip" onclick="setUrl('https://www.instagram.com/cimedco/')">cimed</div>
+      </div>
+    </section>
+
+    <!-- LOADING CARD — substitui o progressBox antigo -->
+    <div id="loadingCard">
+      <div class="lc-icon" id="lcIcon">⟳</div>
+
+      <div class="lc-fila-badge" id="lcFilaBadge">
+        <span class="lc-fila-dot"></span>
+        na fila — aguarde sua vez
+      </div>
+
+      <div class="lc-step" id="lcStep">iniciando…</div>
+      <div class="lc-detail" id="lcDetail">preparando a análise</div>
+
+      <div class="lc-bar-wrap">
+        <div class="lc-bar" id="lcBar"></div>
+      </div>
+
+      <div class="lc-dots">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- mantido oculto para não quebrar o JS antigo -->
+    <div id="progressBox" class="progress-box hidden" style="display:none!important">
+      <div class="progress-header">
+        <span class="progress-label" id="progressLabel">iniciando…</span>
+        <span class="progress-pct" id="progressPct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+    </div>
+
+    <div id="erroBox" class="erro-box hidden"></div>
+
+    <section id="resultado" class="hidden">
+
+      <div class="score-hero">
+        <div class="score-left">
+          <div class="score-tag">score de presença digital</div>
+          <div class="score-number" id="scoreNum">—</div>
+          <div class="score-bar-wrap"><div class="score-bar" id="scoreBar"></div></div>
+          <div class="score-motivo" id="scoreMotivo"></div>
+        </div>
+        <div class="score-right">
+          <div class="rede-tag" id="redeTag"></div>
+          <p class="resumo-txt" id="resumoTxt"></p>
+        </div>
+      </div>
+
+      <div id="estatisticasArea" class="stats-container">
+        <div class="stats-grid">
+          <div class="stat-card" id="cardViewsWrap">
+            <h4 id="labelViews">Total Visualizações</h4>
+            <p id="totalViews">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Total Engajamento</h4>
+            <p id="totalLikes">0</p>
+          </div>
+          <div class="stat-card destaque">
+            <h4>✦ Post de Maior Sucesso</h4>
+            <p id="melhorPostTitulo">—</p>
+            <a id="melhorPostLink" href="#" target="_blank" class="melhor-link">Ver Publicação →</a>
+          </div>
+        </div>
+        <div class="chart-box">
+          <div class="chart-click-hint">↑ clique no nome do post para abrir</div>
+          <canvas id="meuGrafico"></canvas>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-tag">pontos fortes</div>
+          <ul class="insight-list green" id="listFortes"></ul>
+        </div>
+        <div class="card">
+          <div class="card-tag">oportunidades</div>
+          <ul class="insight-list amber" id="listOportunidades"></ul>
+        </div>
+        <div class="card full" id="cardPublicoAlvo" style="display:none">
+          <div class="card-tag">público-alvo</div>
+          <div class="publico-alvo-grid" id="publicoAlvoContent"></div>
+        </div>
+        <div class="card full">
+          <div class="card-tag">ideias de conteúdo</div>
+          <div class="ideias-grid" id="ideiasGrid"></div>
+        </div>
+        <div class="card full">
+          <div class="card-tag">estratégia de crescimento</div>
+          <ul class="insight-list blue" id="listPassos"></ul>
+        </div>
+      </div>
+
+      <div class="bottom-action">
+        <button class="action-btn" onclick="resetar()">◆ analisar outro perfil</button>
+      </div>
+
+    </section>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/analisar.js') }}"></script>
+</body>
+</html>

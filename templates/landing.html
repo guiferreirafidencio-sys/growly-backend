@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Growly</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body>
+<div class="bg">
+  <canvas id="particles"></canvas>
+  <div class="aurora">
+    <div class="aurora-band"></div>
+    <div class="aurora-band"></div>
+    <div class="aurora-band"></div>
+  </div>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="vignette"></div>
+</div>
+
+<div class="page">
+  <nav>
+    <div class="logo">growly</div>
+    <div class="nav-right">
+      <div class="nav-badge">beta</div>
+      <a href="https://growly-backend-production-0edc.up.railway.app/login" class="nav-login">Entrar →</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-eyebrow"><span class="hero-dot"></span> nova forma de crescer</div>
+    <h1 class="hero-title">Seu crescimento<br><em>sem limites.</em></h1>
+    <p class="hero-sub">Growly revela os insights escondidos do seu Instagram — e transforma dados em decisões que fazem você crescer de verdade.</p>
+    <div class="hero-cta-row">
+      <a href="https://growly-backend-production-0edc.up.railway.app/login" class="cta-primary">
+        <span class="cta-icon">✦</span> Descobrir agora <span>→</span>
+      </a>
+      <a href="#features" class="cta-secondary">Ver como funciona</a>
+    </div>
+    <div class="social-proof">
+      <div class="avatars">
+        <div class="av av1">A</div>
+        <div class="av av2">R</div>
+        <div class="av av3">M</div>
+        <div class="av av4">J</div>
+      </div>
+      pessoas já estão usando o Growly
+    </div>
+  </section>
+
+  <div class="stat-bar">
+    <div class="stat-item"><div class="stat-num">100%</div><div class="stat-lbl">gratuito pra começar</div></div>
+    <div class="stat-item"><div class="stat-num">1 min</div><div class="stat-lbl">pra configurar</div></div>
+    <div class="stat-item"><div class="stat-num">∞</div><div class="stat-lbl">insights possíveis</div></div>
+  </div>
+
+  <div id="features">
+    <p class="section-label">o que você ganha</p>
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon pink">🎯</div>
+        <div class="feat-title">Insights reais</div>
+        <div class="feat-body">Entenda o que realmente funciona no seu perfil. Sem achismo, sem chute.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon blue">📊</div>
+        <div class="feat-title">Análise do seu perfil</div>
+        <div class="feat-body">O Growly decodifica seus padrões e te mostra o que o algoritmo enxerga em você.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon lime">⚡</div>
+        <div class="feat-title">Melhor hora pra postar</div>
+        <div class="feat-body">Descubra os horários e formatos que mais engajam a sua audiência específica.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon purple">🤖</div>
+        <div class="feat-title">IA no seu lado</div>
+        <div class="feat-body">Converse com sua IA pessoal e peça sugestões baseadas no seu histórico real.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon pink">🔔</div>
+        <div class="feat-title">Alertas inteligentes</div>
+        <div class="feat-body">Seja avisado quando seu engajamento cair ou uma oportunidade aparecer.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon blue">🔒</div>
+        <div class="feat-title">Seus dados, seus</div>
+        <div class="feat-body">Privacidade total. Nada é compartilhado sem você querer. Crescimento com segurança.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="how">
+    <p class="section-label">como funciona</p>
+    <div class="how-steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">Conecte seu Instagram</div>
+        <div class="step-body">Leva menos de 1 minuto. Sem senha, sem acesso à sua conta.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">Growly analisa tudo</div>
+        <div class="step-body">Nossa IA processa seus dados e gera insights que você nunca viu.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">Você cresce de verdade</div>
+        <div class="step-body">Use os dados pra tomar decisões e ver seu perfil evoluir todo dia.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="final-cta">
+    <div class="final-glow"></div>
+    <h2>Pronto para <em>crescer de verdade?</em></h2>
+    <p>Descubra o que o algoritmo sabe sobre você. É grátis pra começar.</p>
+    <a href="https://growly-backend-production-0edc.up.railway.app/login" class="cta-primary">
+      <span class="cta-icon">✦</span> Quero minha análise <span>→</span>
+    </a>
+  </div>
+
+  <footer>© 2025 Growly · feito com ♥</footer>
+</div>
+
+  <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+</body>
+</html>
