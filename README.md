@@ -1,26 +1,15 @@
-# Growly Backend
+Growly
 
-## Estrutura
+O Growly é uma plataforma web desenvolvida com Python e Flask para análise de dados, automação de processos e integração com Inteligência Artificial.
 
-- `main.py`: ponto de entrada Flask, mantido na raiz para o comando de deploy.
-- `app/`: pasta-mãe de todo o código da aplicação.
-  - `config/`: variáveis de ambiente e configuração Flask.
-  - `database/`: SQLAlchemy e modelos (`User` e `Analise`).
-  - `routes/`: páginas e APIs por funcionalidade.
-  - `services/`: chat e integrações externas.
-  - `scraper/`: motor do antigo `bot.py` e sua API pública.
-  - `storage/`: caminhos de sessões, banco local e logs.
-  - `account_manager.py`: controle atômico das contas do Instagram.
-- `assets/`, `templates/` e `static/`: arquivos visuais no mesmo nível; Flask usa `templates/` e `static/`.
+O projeto utiliza APIs externas para coletar e processar informações, oferecendo recursos de análise e automação através de uma aplicação web.
 
-## Execução
+Tecnologias
 
-Instale as dependências com `pip install -r requirements.txt`. Para o scraper,
-execute também `playwright install chromium`. Em seguida, rode `flask --app main run`
-ou `gunicorn main:app` em produção.
+Python, Flask, SQLAlchemy, PostgreSQL, SQLite, Pandas, Playwright, HTML, CSS e JavaScript.
 
-## Variáveis de ambiente
+Também utiliza Google OAuth para autenticação e Railway para deploy.
 
-Configure `SECRET_KEY`, `DATABASE_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_SECRET` e
-`REDIRECT_URI`. As chaves de IA aceitam `GEMINI_API_1` a `GEMINI_API_10` e
-`OPENROUTER_API_1` a `OPENROUTER_API_5`.
+Estrutura
+
+O projeto está sendo refatorado para separar responsabilidades como banco de dados, autenticação, segurança, configurações e regras da aplicação, tornando o código mais organizado e fácil de manter.
